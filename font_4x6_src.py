@@ -605,9 +605,9 @@ font_4x6_src = {
   0x006B: # 'k' "\u006B"
    ("        ",
     "()      ",
+    "()      ",
     "()  ()  ",
     "()()    ",
-    "()  ()  ",
     "()  ()  "),
    
   0x006C: # 'l' "\u006C"
@@ -638,16 +638,16 @@ font_4x6_src = {
    ("        ",
     "        ",
     "        ",
-    "()()()  ",
+    "  ()    ",
     "()  ()  ",
-    "()()()  "),
+    "  ()    "),
    
   0x0070: # 'p' "\u0070"
    ("        ",
     "        ",
-    "()()()  ",
+    "()()    ",
     "()  ()  ",
-    "()()()  ",
+    "()()    ",
     "()      "),
    
   0x0071: # 'q' "\u0071"
@@ -807,7 +807,14 @@ def f3(s):
     retv += "1" if s[3 * 2] != " " else "0"
     return '(' + retv + ')'
 
-v = 2 # 1, 2, 3, 4 or 5
+def f4(v, x):
+    retv = 0
+    for i in range(6):
+        if v[i][x * 2] != " ":
+            retv |= 0x20 >> i
+    return "%02X" % retv
+
+v = 6 # 1, 2, 3, 4, 5, 6 or 7
 
 if v == 1: # demo mode
     print("font_4x6_src = {")
@@ -876,3 +883,29 @@ elif v == 5: # super COMPACT mode (bytearrays)
         print(str)
     
     print(")")
+
+elif v == 6: # mega mode (6*4)
+    print("font_4x6 = {")
+    
+    for k, v in font_4x6_src.items():
+        str = '  0x%04X: b"' % k
+        for i in range(4):
+            str += '\\x' + f4(v, i) 
+        str += '", # \'' + chr(k) + "'"
+        print(str)
+
+    print("}")
+
+elif v == 7: # mega mode compact (6*4)
+    print("font_4x6_compact = (")
+    for k in range(ord(b" "), ord(b'~') + 1):
+        v = font_4x6_src[k]
+
+        str = '  b"'
+        for i in range(4):
+            str += '\\x' + f4(v, i) 
+        str += '", # \'' + chr(k) + "'"
+        print(str)
+
+    print(")")
+

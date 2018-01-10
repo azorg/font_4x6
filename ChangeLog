@@ -3,4 +3,5 @@
 
 2018.01.10:
  + add some symbols (#, $, &, ´)
+ * convert 4x6 to 6*4 bytearays
 
